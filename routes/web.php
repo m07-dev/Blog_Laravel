@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MyController;
 use App\Models\Post;
+use Illuminate\Routing\Route as RoutingRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +22,9 @@ Route::get('/', function () {
 
 Route::get('/blog', [MyController::class, 'createPost']);
 
-Route::get('/fakebook', function () {
-    return view('fakebook');
-});
+Route::get('/createPost', function () {
+    return view('createPost');
+})->name('createPost');
 
 
 Route::get('/acceuilBlog', function () {
@@ -34,9 +35,15 @@ Route::get('/acceuilBlog', function () {
 
 Route::post('/acceuilBlog', [MyController::class, 'affichePost'])->name('form:action');
 
+
 Route::get('/view', function () {
-   $life = \App\Models\Post::where('title','=',"Salam")->get();
-   return $life;
+    $life = \App\Models\Post::all();
+    return $life;
 });
 
-Route::get('/etude', [MyController::class, 'create']);
+Route::get('/viewall/{id}', function ($id) {
+    $post = \App\Models\Post::find($id);
+    return view('viewpost', ['post' => $post]);
+})->name('single_post');
+
+Route::post('/viewall/{id}', [MyController::class, 'deletePost'])->name('form:delete');
